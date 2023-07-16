@@ -10,8 +10,10 @@ import java.util.Scanner;
 class Main {
     public static void main(String[] args) {
         try {
+            // Lendo os dados do arquivo
             List<DataEntry> dataEntries = readDataEntriesFromFile("dados.csv");
 
+            // Obtendo os valores de n1, n2, n3 e n4
             Scanner scanner = new Scanner(System.in);
             int n1 = scanner.nextInt();
             int n2 = scanner.nextInt();
@@ -19,6 +21,7 @@ class Main {
             int n4 = scanner.nextInt();
             scanner.close();
 
+            // Checando se os valores de n1, n2, n3 e n4 são válidos
             if (n1 < 0 || n2 < 0 || n3 < 0 || n4 < 0) {
                 throw new IllegalArgumentException("Os números inseridos não são válidos!");
             }
@@ -61,6 +64,7 @@ class Main {
             }
             Collections.sort(topConfirmedCountries);
 
+            // Exibindo os resultados
             System.out.println(activeSum);
             deathsList.forEach(System.out::println);
             topConfirmedCountries.forEach(System.out::println);
@@ -80,7 +84,7 @@ class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-
+                // Parsing das linhas do arquivo
                 String[] parts = line.split(",");
                 if (parts.length < 5) {
                     throw new IOException("Dados insuficientes na linha!");
