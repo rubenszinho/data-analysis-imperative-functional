@@ -1,11 +1,11 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class Main {
     public static void main(String[] args) {
@@ -59,22 +59,14 @@ class Main {
     }
 
     private static List<DataEntry> readDataEntriesFromFile(String fileName) throws IOException {
-        List<DataEntry> dataEntries = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 5) {
-                    String country = parts[0];
-                    int confirmed = Integer.parseInt(parts[1]);
-                    int deaths = Integer.parseInt(parts[2]);
-                    int active = Integer.parseInt(parts[4]);
-                    DataEntry entry = new DataEntry(country, confirmed, deaths, active);
-                    dataEntries.add(entry);
-                }
-            }
+        try (Stream<String> lines = Files.lines(Paths.get(fileName))) {
+            return lines
+                    .map(line -> line.split(","))
+                    .filter(parts -> parts.length >= 5)
+                    .map(parts -> new DataEntry(parts[0], Integer.parseInt(parts[1]), Integer.parseInt(parts[2]),
+                            Integer.parseInt(parts[4])))
+                    .collect(Collectors.toList());
         }
-        return dataEntries;
     }
 
     private static int calculateActiveSum(List<DataEntry> dataEntries, int n1) {
